@@ -31,6 +31,14 @@ jobs:
           fi
           echo "키 확인됨."
 
+      - name: 수집 대상 사이트 접속 점검
+        run: |
+          for h in www.jeju.go.kr www.jejusi.go.kr www.seogwipo.go.kr www.playjeju.co.kr \
+                   api.visitjeju.net www.visitjeju.net www.jejunolda.com www.jfac.kr; do
+            code=$(curl -s -o /dev/null -m 20 -w '%{http_code}' "https://$h/" || echo "000")
+            printf '  %-24s %s\n' "$h" "$code"
+          done
+
       - name: 수집
         env:
           VISITJEJU_API_KEY: ${{ secrets.VISITJEJU_API_KEY }}

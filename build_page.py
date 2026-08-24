@@ -20,7 +20,9 @@ src = sys.argv[1] if len(sys.argv) > 1 else max(
 rows = list(csv.DictReader(open(src, encoding='utf-8-sig')))
 
 CAT_ORDER = ['공연', '전시', '축제·행사', '아동·가족']
-today = datetime.date.today().isoformat()
+KST = datetime.timezone(datetime.timedelta(hours=9))
+now_kst = datetime.datetime.now(KST)
+today = now_kst.date().isoformat()
 
 def clean(v):
     return re.sub(r'\s+', ' ', (v or '')).strip()
@@ -47,7 +49,7 @@ data.sort(key=lambda x: (x['s'], x['t']))
 months = sorted({d['s'][:7] for d in data} | {d['e'][:7] for d in data})
 months = [m for m in months if m >= today[:7]][:4]
 
-bundle = {'built': datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),
+bundle = {'built': now_kst.strftime('%Y-%m-%d %H:%M'),
           'today': today, 'months': months,
           'cats': [c for c in CAT_ORDER if any(d['c'] == c for d in data)],
           'events': data}
@@ -283,7 +285,7 @@ TPL = r'''<!-- 제주 공연·행사 일정 · 자동 생성 ({{BUILT}}) · 총 
 subs = {
     'PAYLOAD': payload,
     'TODAY': today,
-    'BUILT': datetime.date.today().strftime('%Y.%m.%d'),
+    'BUILT': now_kst.strftime('%Y.%m.%d'),
     'N': str(len(data)),
     'MONTHS': json.dumps(months),
     'CATS': json.dumps([c for c in CAT_ORDER if any(d['c'] == c for d in data)], ensure_ascii=False),

@@ -10,6 +10,10 @@ import re, csv, sys, json, html, os, subprocess, unicodedata, datetime
 from concurrent.futures import ThreadPoolExecutor
 
 BASE = os.path.dirname(os.path.abspath(__file__))
+KST = datetime.timezone(datetime.timedelta(hours=9))
+def today_kst():
+    """깃허브 러너는 UTC로 돈다. 한국 날짜로 맞춰야 수집 대상 월이 어긋나지 않는다."""
+    return datetime.datetime.now(KST).date()
 OUT  = os.path.join(BASE, 'out'); os.makedirs(OUT, exist_ok=True)
 UA   = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/126 Safari/537.36'
 
@@ -235,7 +239,7 @@ def src_visitjeju(months):
 
     # 다시 확인하는 대상: 캐시에 없는 것 + 최근/임박한 행사(날짜가 아직 바뀔 수 있음).
     # 이미 시작해서 길게 가는 상설 전시 같은 건 매번 다시 볼 필요가 없다.
-    t = datetime.date.today()
+    t = today_kst()
     lo = (t - datetime.timedelta(days=30)).strftime('%Y%m%d')
     hi = (t + datetime.timedelta(days=120)).strftime('%Y%m%d')
     def recheck(c):
@@ -381,12 +385,25 @@ def build(months, extra=None):
     ly, lm = months[-1]
     E = f'{ly}-{int(lm):02d}-31'
     raw = []
+    empty = []
     for name, fn in (('문예회관',src_munye), ('플레이제주',src_playjeju), ('제주아트센터',src_artcenter),
                      ('서귀포시',src_seogwipo), ('재단공고',src_jfac), ('비짓제주',src_visitjeju), ('제주인놀다',src_jejunolda), ('직접등록',src_manual)):
         try:
             got = fn(months); raw += got; print(f'  {name:8s} {len(got):4d}건')
         except Exception as e:
-            print(f'  {name:8s} 실패: {e}')
+            got = []; print(f'  {name:8s} 실패: {e}')
+        if not got and name not in ('직접등록', '재단공고'):
+            empty.append(name)
+
+    # 소스가 여러 개 통째로 비면 수집 자체가 실패한 것이다.
+    # 이걸 그냥 내보내면 사이트가 반쪽짜리로 바뀌므로 여기서 멈춘다.
+    if len(empty) >= 2:
+        raise SystemExit(
+            '\n[중단] 소스 %d개가 아무것도 못 가져왔습니다: %s\n'
+            '       네트워크에서 해당 사이트에 닿지 못했을 가능성이 큽니다.\n'
+            '       반쪽 데이터를 배포하지 않으려고 중단합니다.' % (len(empty), ', '.join(empty)))
+    if empty:
+        print(f'  ⚠ 빈 소스: {", ".join(empty)} (1개뿐이라 계속 진행)')
     raw += (extra or [])
 
     merged = {}
@@ -425,13 +442,13 @@ def main():
     if len(sys.argv) >= 3:
         months = [tuple(map(int, a.split('-'))) for a in sys.argv[1:3]]
     else:
-        t = datetime.date.today()
+        t = today_kst()
         n = (t.replace(day=28) + datetime.timedelta(days=7))
         months = [(t.year, t.month), (n.year, n.month)]
     print('수집 대상:', ', '.join(f'{y}년 {m}월' for y, m in months))
     rows = build(months)
     cols = ['번호','카테고리','명칭','시작일','종료일','시간','장소','지역','무료','요금','주최','문의','이미지','출처','링크','비고']
-    p = os.path.join(OUT, 'jeju_events_%s.csv' % datetime.date.today().strftime('%Y%m%d'))
+    p = os.path.join(OUT, 'jeju_events_%s.csv' % today_kst().strftime('%Y%m%d'))
     with open(p, 'w', newline='', encoding='utf-8-sig') as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction='ignore'); w.writeheader(); w.writerows(rows)
     print(f'\n총 {len(rows)}건 → {p}')
