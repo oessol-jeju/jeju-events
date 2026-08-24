@@ -54,8 +54,11 @@ bundle = {'built': datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),
 json.dump(bundle, open(os.path.join(DOCS, 'events.json'), 'w', encoding='utf-8'),
           ensure_ascii=False, separators=(',', ':'))
 
-# 데이터 URL이 설정돼 있으면 fetch 방식, 아니면 데이터를 통째로 심는다
-payload = json.dumps(data, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
+# data_url 이 있으면 인라인 데이터를 생략한다. 방문자가 쓰지도 않을 사본을 받지 않도록.
+if DATA_URL:
+    payload = '[]'
+else:
+    payload = json.dumps(data, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
 
 TPL = r'''<!-- 제주 공연·행사 일정 · 자동 생성 ({{BUILT}}) · 총 {{N}}건 -->
 <div id="jeju-on">
@@ -169,7 +172,13 @@ TPL = r'''<!-- 제주 공연·행사 일정 · 자동 생성 ({{BUILT}}) · 총 
           shown = STEP; draw();
         }
       })
-      .catch(function () { /* 사본으로 그대로 보여준다 */ });
+      .catch(function () {
+        if (!DATA.length) {
+          document.getElementById("jo-grid").innerHTML =
+            '<div class="jo-empty" style="grid-column:1/-1">일정을 불러오지 못했습니다. 잠시 후 새로고침해 주세요.</div>';
+          document.getElementById("jo-count").textContent = "";
+        }
+      });
   }
 
   var f = { cat: "", region: "", month: "", free: false, q: "" }, shown = STEP;
@@ -224,6 +233,13 @@ TPL = r'''<!-- 제주 공연·행사 일정 · 자동 생성 ({{BUILT}}) · 총 
       "<b>" + hits.length + "</b>건" + (f.q ? " &middot; &ldquo;" + esc(f.q) + "&rdquo;" : "");
 
     var slice = hits.slice(0, shown);
+    if (!DATA.length && SRC) {
+      document.getElementById("jo-grid").innerHTML =
+        '<div class="jo-empty" style="grid-column:1/-1">일정을 불러오는 중…</div>';
+      document.getElementById("jo-count").textContent = "";
+      document.getElementById("jo-more").hidden = true;
+      return;
+    }
     document.getElementById("jo-grid").innerHTML = slice.length ? slice.map(function (d) {
       var img = d.i
         ? '<img src="' + esc(d.i) + '" alt="' + esc(d.t) + ' 포스터" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">'
