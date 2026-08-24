@@ -19,6 +19,18 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: API 키 확인
+        env:
+          VISITJEJU_API_KEY: ${{ secrets.VISITJEJU_API_KEY }}
+        run: |
+          if [ -z "$VISITJEJU_API_KEY" ]; then
+            echo "::error::VISITJEJU_API_KEY 시크릿이 없습니다."
+            echo "Settings → Secrets and variables → Actions 에서 등록한 뒤 다시 실행하세요."
+            echo "키 없이 돌리면 비짓제주 800여 건이 빠진 채로 커밋됩니다."
+            exit 1
+          fi
+          echo "키 확인됨."
+
       - name: 수집
         env:
           VISITJEJU_API_KEY: ${{ secrets.VISITJEJU_API_KEY }}
