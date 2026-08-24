@@ -14,13 +14,39 @@ jeju-events/
 └── out/                  결과 CSV
 ```
 
-## 매주 하는 일
+## 자동으로 도는 것 (손 안 대도 됨)
+
+| 언제 | 어디서 | 무엇을 |
+|---|---|---|
+| 매일 07:30 | **맥** (launchd) | 8개 소스 전부 수집 → 깃허브 푸시 |
+| 매일 13:00 | 깃허브 Actions | 접속 가능한 소스만 갱신 (보조) |
+
+맥이 주 수집기다. **깃허브 러너에서는 아래 4곳에 접속이 안 된다** (2026-08 확인, 4개 소스 전부 0건):
+
+- `jeju.go.kr` (문예회관) · `jejusi.go.kr` (제주아트센터) · `seogwipo.go.kr` · `playjeju.co.kr`
+
+접속되는 곳은 `visitjeju.net`, `jejunolda.com`, `jfac.kr` 뿐이다.
+그래서 깃허브 쪽은 못 가져온 소스의 **직전 데이터를 그대로 이어받아** 반쪽 데이터가 배포되는 걸 막는다.
+
+맥 자동 실행 상태 확인:
+
+```bash
+tail -30 ~/jeju-events/out/daily.log
+```
+
+멈추려면:
+
+```bash
+launchctl unload ~/Library/LaunchAgents/kr.oesol.jeju-events.plist
+```
+
+## 손으로 돌릴 때
 
 ```bash
 python3 ~/jeju-events/refresh.py
 ```
 
-인자 없이 돌리면 이번 달 + 다음 달을 긁는다. 특정 기간은 이렇게:
+인자 없이 돌리면 **이번 달 + 앞으로 두 달**을 긁는다. 특정 기간은 이렇게:
 
 ```bash
 python3 ~/jeju-events/refresh.py 2026-09 2026-10

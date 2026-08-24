@@ -1,9 +1,13 @@
-name: 제주 행사 자동 수집
+# 주 수집기는 맥(launchd, 매일 07:30 KST)이다.
+# 깃허브 러너에서는 jeju.go.kr / jejusi.go.kr / seogwipo.go.kr / playjeju.co.kr 에
+# 접속이 안 된다(2026-08 확인). 그래서 여기서는 접속되는 소스만 갱신하고
+# 나머지는 직전 데이터를 이어받는다. 맥이 며칠 꺼져 있어도 사이트가 멈추지 않게 하는 보조 장치.
+name: 제주 행사 자동 수집 (보조)
 
 on:
   schedule:
-    - cron: '0 20 * * *'      # 매일 05:00 (한국시간)
-  workflow_dispatch:           # 필요하면 손으로도 실행
+    - cron: '0 4 * * *'       # 매일 13:00 KST — 맥 실행(07:30)보다 늦게
+  workflow_dispatch:
 
 permissions:
   contents: write
