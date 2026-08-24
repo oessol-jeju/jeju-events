@@ -218,9 +218,9 @@ TPL = r'''<!-- 제주 공연·행사 일정 · 자동 생성 ({{BUILT}}) · 총 
     return '<button class="jo-chip" data-k="' + k + '" data-v="' + esc(v) + '" aria-pressed="' + on + '">' + text + "</button>";
   }
 
-  function draw() {
-    var hits = DATA.filter(match);
-
+  // 검색창을 매 입력마다 새로 그리면 한글 조합이 깨진다.
+  // 그래서 필터 줄과 결과 목록을 나눠서 그린다. 타이핑 중에는 목록만 다시 그린다.
+  function drawFilters() {
     document.getElementById("jo-f1").innerHTML =
       chip("cat", "", "전체") +
       CATS.map(function (c) { return chip("cat", c, c); }).join("") +
@@ -231,6 +231,34 @@ TPL = r'''<!-- 제주 공연·행사 일정 · 자동 생성 ({{BUILT}}) · 총 
       chip("region", "", "제주 전역") + chip("region", "제주시", "제주시") + chip("region", "서귀포시", "서귀포시") +
       '<span class="jo-sep"></span>' + chip("free", true, "무료만") +
       '<input class="jo-search" id="jo-q" type="search" placeholder="행사명 · 장소 검색" value="' + esc(f.q) + '">';
+
+    Array.prototype.forEach.call(root.querySelectorAll(".jo-chip"), function (b) {
+      b.onclick = function () {
+        var k = b.dataset.k;
+        if (k === "free") f.free = !f.free;
+        else f[k] = (f[k] === b.dataset.v) ? "" : b.dataset.v;
+        shown = STEP; draw();
+      };
+    });
+
+    var q = document.getElementById("jo-q");
+    if (q) {
+      var composing = false;
+      q.addEventListener("compositionstart", function () { composing = true; });
+      q.addEventListener("compositionend", function () {
+        composing = false; f.q = q.value; shown = STEP; drawGrid();
+      });
+      q.addEventListener("input", function () {
+        if (composing) return;          // 한글 조합 중에는 건드리지 않는다
+        f.q = q.value; shown = STEP; drawGrid();
+      });
+    }
+  }
+
+  function draw() { drawFilters(); drawGrid(); }
+
+  function drawGrid() {
+    var hits = DATA.filter(match);
 
     document.getElementById("jo-count").innerHTML =
       "<b>" + hits.length + "</b>건" + (f.q ? " &middot; &ldquo;" + esc(f.q) + "&rdquo;" : "");
@@ -259,25 +287,9 @@ TPL = r'''<!-- 제주 공연·행사 일정 · 자동 생성 ({{BUILT}}) · 총 
     var more = document.getElementById("jo-more");
     more.hidden = hits.length <= shown;
     more.textContent = "더 보기 (" + Math.max(0, hits.length - shown) + "건 남음)";
-
-    Array.prototype.forEach.call(root.querySelectorAll(".jo-chip"), function (b) {
-      b.onclick = function () {
-        var k = b.dataset.k;
-        if (k === "free") f.free = !f.free;
-        else f[k] = (f[k] === b.dataset.v) ? "" : b.dataset.v;
-        shown = STEP; draw();
-      };
-    });
-    var q = document.getElementById("jo-q");
-    if (q) {
-      q.oninput = function () {
-        var pos = this.selectionStart; f.q = this.value; shown = STEP; draw();
-        var n = document.getElementById("jo-q"); if (n) { n.focus(); n.setSelectionRange(pos, pos); }
-      };
-    }
   }
 
-  document.getElementById("jo-more").onclick = function () { shown += STEP; draw(); };
+  document.getElementById("jo-more").onclick = function () { shown += STEP; drawGrid(); };
   draw();
 })();
 </script>
