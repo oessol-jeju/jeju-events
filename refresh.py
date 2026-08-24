@@ -17,7 +17,33 @@ def today_kst():
 OUT  = os.path.join(BASE, 'out'); os.makedirs(OUT, exist_ok=True)
 UA   = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/126 Safari/537.36'
 
+_DEAD = set()          # 아예 닿지 않는 호스트. 여기 걸리면 즉시 포기한다.
+
+def probe_hosts(hosts):
+    """수집 전에 호스트를 한 번씩만 찔러본다.
+    깃허브 러너에서는 일부 국내 사이트에 접속이 안 되는데, 매 URL마다 재시도하면
+    20분씩 허비한다. 미리 걸러 두면 그 시간이 통째로 사라진다."""
+    def one(h):
+        # 한 번의 실패로 소스를 통째로 버리면 안 된다. 세 번 다 실패해야 죽은 걸로 본다.
+        import time as _t
+        last = ''
+        for i in range(3):
+            r = subprocess.run(['curl','-s','-o','/dev/null','-m','15','-w','%{http_code}',
+                                '-A',UA,f'https://{h}/'], capture_output=True)
+            last = r.stdout.decode().strip()
+            if last.startswith(('2','3','4')):
+                return h, last
+            _t.sleep(2)
+        return h, last
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        for h, code in ex.map(one, hosts):
+            ok = code.startswith(('2','3','4'))
+            if not ok: _DEAD.add(h)
+            print(f'    {h:24s} {code or "응답없음"}{"" if ok else "  ← 건너뜀"}')
+
 def get(url, timeout=30, tries=2):
+    if any(('://' + h) in url for h in _DEAD):
+        return ''
     import time as _t
     for i in range(tries):
         try:
@@ -415,6 +441,7 @@ def build(months, extra=None):
                         일시=(e.get('s','') if e.get('s')==e.get('e') else e.get('s','')+' ~ '+e.get('e','')),
                         시간=e.get('h',''), 장소=e.get('v',''), 요금=e.get('p',''),
                         주최=e.get('o',''), 문의='', 이미지=e.get('i',''),
+                        소스=e.get('src',''),        # 다음 회차에도 이어받을 수 있게 태그 유지
                         출처=e.get('src',''), 링크=e.get('u','')))
                     carried += 1
         print(f'  ⚠ 못 가져온 소스: {", ".join(empty)} → 직전 데이터 {carried}건 유지')
@@ -466,6 +493,10 @@ def main():
             m += 1
             if m > 12: m, y = 1, y + 1
     print('수집 대상:', ', '.join(f'{y}년 {m}월' for y, m in months))
+    print('  호스트 점검')
+    probe_hosts(['www.jeju.go.kr', 'www.jejusi.go.kr', 'www.seogwipo.go.kr',
+                 'www.playjeju.co.kr', 'api.visitjeju.net', 'www.visitjeju.net',
+                 'www.jejunolda.com', 'www.jfac.kr'])
     rows = build(months)
     cols = ['번호','카테고리','명칭','시작일','종료일','시간','장소','지역','무료','요금','주최','문의','이미지','소스','출처','링크','비고']
     p = os.path.join(OUT, 'jeju_events_%s.csv' % today_kst().strftime('%Y%m%d'))
