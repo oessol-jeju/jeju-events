@@ -271,7 +271,62 @@ def src_visitjeju(months):
             출처='비짓제주', 링크=f'https://www.visitjeju.net/kr/festival/view?contentsid={cid}'))
     return rows
 
-# ─────────────────── 7. manual.csv (포스터 접수 · 인스타 · 재단 PDF · 손입력) ───────────────────
+# ─────────────────────────── 7. 제주인놀다 (제주문화예술재단) ───────────────────────────
+# 오픈API는 등록(create/update/delete) 전용이라 읽기용이 아니다.
+# 사이트가 쓰는 검색 엔드포인트를 그대로 쓴다. indayString=YYYY-MM-DD 로 그날 열리는 행사를 준다.
+# 좌표(x=위도, y=경도)와 포스터까지 들어 있어 나중에 지도를 붙일 때도 쓸 수 있다.
+JN = 'https://www.jejunolda.com/event/progress.htm'
+JN_CAT = {'전시회':'전시', '콘서트':'공연', '연극':'공연', '전통공연':'공연', '무용':'공연',
+          '뮤지컬':'공연', '클래식':'공연', '축제':'축제·행사', '교육/체험':'체험·행사',
+          '영화':'공연', '기타':'축제·행사'}
+
+def src_jejunolda(months):
+    import datetime as _dt
+    days = []
+    for y, m in months:
+        d = _dt.date(y, int(m), 1)
+        while d.month == int(m):
+            days.append(d.isoformat()); d += _dt.timedelta(days=1)
+
+    def one_day(day):
+        try:
+            d = json.loads(get(f'{JN}?act=search&format=json&pageSize=100&page=1&indayString={day}'))
+        except Exception:
+            return []
+        return d.get('eventList') or []
+
+    seen = {}
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        for lst in ex.map(one_day, days):
+            for e in lst:
+                if e.get('seq') is not None:
+                    seen[e['seq']] = e
+
+    def ymd(v):
+        # 저장 방식이 섞여 있다. 어떤 건 UTC 자정(00:00Z), 어떤 건 KST 자정(15:00Z).
+        # 둘 다 +9시간 뒤 날짜를 취하면 실제 한국 날짜와 맞는다.
+        try: return _dt.datetime.utcfromtimestamp(v / 1000 + 9 * 3600).strftime('%Y-%m-%d')
+        except Exception: return ''
+
+    rows = []
+    for seq, e in seen.items():
+        a, b = ymd(e.get('start')), ymd(e.get('end'))
+        if not a: continue
+        cat = JN_CAT.get(e.get('categoryName') or '', '축제·행사')
+        pay = e.get('payName') or ''
+        rows.append(dict(
+            구분=f'{cat}(제주인놀다)', 명칭=(e.get('name') or '').strip(),
+            일시=(a if a == b or not b else f'{a} ~ {b}'),
+            시간=(e.get('time') or ''),
+            장소=(e.get('instituteName') or e.get('addr2') or e.get('addr1') or ''),
+            요금=('무료' if pay == '무료' else pay),
+            주최=(e.get('ownerName') or ''), 문의=(e.get('tel') or ''),
+            이미지=(e.get('poster') or ''),
+            출처='제주인놀다',
+            링크=f'https://www.jejunolda.com/event/progress.htm#{seq}'))
+    return rows
+
+# ─────────────────── 8. manual.csv (포스터 접수 · 인스타 · 재단 PDF · 손입력) ───────────────────
 # 컬럼: 구분,명칭,일시,시간,장소,요금,주최,문의,출처,링크
 # 자동 수집이 못 잡는 소규모 행사는 전부 여기로 들어온다.
 def src_manual(months):
@@ -327,7 +382,7 @@ def build(months, extra=None):
     E = f'{ly}-{int(lm):02d}-31'
     raw = []
     for name, fn in (('문예회관',src_munye), ('플레이제주',src_playjeju), ('제주아트센터',src_artcenter),
-                     ('서귀포시',src_seogwipo), ('재단공고',src_jfac), ('비짓제주',src_visitjeju), ('직접등록',src_manual)):
+                     ('서귀포시',src_seogwipo), ('재단공고',src_jfac), ('비짓제주',src_visitjeju), ('제주인놀다',src_jejunolda), ('직접등록',src_manual)):
         try:
             got = fn(months); raw += got; print(f'  {name:8s} {len(got):4d}건')
         except Exception as e:
