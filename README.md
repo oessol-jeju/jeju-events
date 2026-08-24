@@ -128,3 +128,77 @@ python3 ~/jeju-events/vj_api_test.py $(cat ~/jeju-events/visitjeju_apikey.txt)
 주최자가 포스터를 올리는 페이지: 아티팩트로 배포됨.
 접수된 건은 페이지 안 **관리 → 대기 목록 CSV 내려받기**로 받아서 `manual.csv`에 붙이면 된다.
 포스터에서 행사명·일시·장소를 읽는 건 사람(또는 클로드)이 확인하고 채운다.
+
+
+---
+
+# 사이트로 키우기
+
+## 구조
+
+```
+GitHub Actions (매일 05:00)
+   └ refresh.py → build_page.py
+        └ docs/events.json  ──(GitHub Pages, CORS 허용)──┐
+                                                          │
+스퀘어스페이스 AMF 홈페이지                                  │
+   └ 코드 블록 (한 번만 붙임) ── fetch ────────────────────┘
+```
+
+스퀘어스페이스는 깃허브에서 자동 배포가 안 된다. 그래서 **껍데기만 스퀘어스페이스에 두고
+데이터는 깃허브에서 매일 갱신**한다. 코드 블록은 처음 한 번만 붙이면 그 뒤로 손댈 일이 없다.
+
+데이터를 못 받아오면 붙여넣을 때 심어둔 사본을 그대로 보여주므로, 깃허브가 죽어도 페이지는 뜬다.
+
+## 한 번만 하는 세팅
+
+**① 깃허브 저장소 만들기** (github.com에서 `jeju-events` 새 저장소, Private 가능)
+
+```bash
+cd ~/jeju-events
+git remote add origin https://github.com/<계정명>/jeju-events.git
+git push -u origin main
+```
+
+**② API 키를 Secrets에 넣기**
+저장소 → Settings → Secrets and variables → Actions → New repository secret
+- 이름: `VISITJEJU_API_KEY`
+- 값: `visitjeju_apikey.txt` 안의 값
+
+**③ GitHub Pages 켜기**
+Settings → Pages → Source: `Deploy from a branch` → Branch `main` / 폴더 `/docs` → Save
+
+**④ 데이터 주소 알려주기**
+`site_config.json` 의 `data_url` 을 아래로 채우고 커밋:
+
+```json
+{ "data_url": "https://<계정명>.github.io/jeju-events/events.json" }
+```
+
+**⑤ 임베드 다시 만들어 붙이기**
+
+```bash
+python3 build_page.py
+pbcopy < out/amf_jeju_events_embed.html
+```
+
+스퀘어스페이스 코드 블록에 붙여넣으면 끝. 이후로는 아무것도 안 해도 매일 갱신된다.
+
+> 저장소가 Private 이면 GitHub Pages 는 유료 플랜에서만 된다. 무료로 쓰려면 Public 으로.
+> 올라가는 건 행사 정보뿐이고 API 키는 `.gitignore` 로 제외돼 있다.
+
+## 소모임 채우기 — spaces.csv
+
+`spaces.csv` 에 제주 문화공간 40곳을 정리해 뒀다. 중요한 발견:
+
+- **22곳은 이미 자동 수집된다** (미술관·도서관·문예회관 등 기관). 인스타를 붙일 필요가 없다.
+- **인스타가 필요한 건 18곳**, 그중 9곳이 독립서점이다.
+
+대상이 18곳뿐이라 Meta Graph API 앱 심사(2~3주, 반려 가능)를 기다릴 이유가 약하다.
+`ig_extract.js` 브라우저 방식이면 로그인 없이 지금 당장 되고, 18곳은 한 번에 몇 분이면 훑는다.
+대상이 100곳을 넘어가면 그때 Graph API 로 옮기면 된다.
+
+순서:
+1. `spaces.csv` 의 `인스타계정` 칸을 채운다 (인스타 앱에서 공간명 검색 → 핸들 복사)
+2. 계정별 최근 게시물을 훑어 캡션에서 행사 정보를 뽑는다
+3. `manual.csv` 에 추가 → `refresh.py` → `build_page.py`
