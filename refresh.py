@@ -389,21 +389,37 @@ def build(months, extra=None):
     for name, fn in (('문예회관',src_munye), ('플레이제주',src_playjeju), ('제주아트센터',src_artcenter),
                      ('서귀포시',src_seogwipo), ('재단공고',src_jfac), ('비짓제주',src_visitjeju), ('제주인놀다',src_jejunolda), ('직접등록',src_manual)):
         try:
-            got = fn(months); raw += got; print(f'  {name:8s} {len(got):4d}건')
+            got = fn(months)
+            for g in got: g.setdefault('소스', name)
+            raw += got; print(f'  {name:8s} {len(got):4d}건')
         except Exception as e:
             got = []; print(f'  {name:8s} 실패: {e}')
         if not got and name not in ('직접등록', '재단공고'):
             empty.append(name)
 
-    # 소스가 여러 개 통째로 비면 수집 자체가 실패한 것이다.
-    # 이걸 그냥 내보내면 사이트가 반쪽짜리로 바뀌므로 여기서 멈춘다.
-    if len(empty) >= 2:
-        raise SystemExit(
-            '\n[중단] 소스 %d개가 아무것도 못 가져왔습니다: %s\n'
-            '       네트워크에서 해당 사이트에 닿지 못했을 가능성이 큽니다.\n'
-            '       반쪽 데이터를 배포하지 않으려고 중단합니다.' % (len(empty), ', '.join(empty)))
+    # 못 가져온 소스는 지난번 결과를 그대로 이어붙인다.
+    # (깃허브 러너에서는 일부 국내 사이트에 접속이 안 된다. 그렇다고 그 행사들을
+    #  통째로 지워버리면 사이트가 반쪽이 되므로, 직전 데이터를 유지한다.)
     if empty:
-        print(f'  ⚠ 빈 소스: {", ".join(empty)} (1개뿐이라 계속 진행)')
+        prev = os.path.join(BASE, 'docs', 'events.json')
+        carried = 0
+        if os.path.exists(prev):
+            try:
+                old = json.load(open(prev, encoding='utf-8')).get('events') or []
+            except Exception:
+                old = []
+            names = set(empty)
+            for e in old:
+                if e.get('src') in names:
+                    raw.append(dict(구분=e.get('c',''), 명칭=e.get('t',''),
+                        일시=(e.get('s','') if e.get('s')==e.get('e') else e.get('s','')+' ~ '+e.get('e','')),
+                        시간=e.get('h',''), 장소=e.get('v',''), 요금=e.get('p',''),
+                        주최=e.get('o',''), 문의='', 이미지=e.get('i',''),
+                        출처=e.get('src',''), 링크=e.get('u','')))
+                    carried += 1
+        print(f'  ⚠ 못 가져온 소스: {", ".join(empty)} → 직전 데이터 {carried}건 유지')
+        if not carried and len(empty) >= 4:
+            raise SystemExit('\n[중단] 소스 대부분이 실패했고 이어받을 직전 데이터도 없습니다.')
     raw += (extra or [])
 
     merged = {}
@@ -418,7 +434,7 @@ def build(months, extra=None):
                    시간=strip(r.get('시간',''))[:35], 장소=strip(r.get('장소',''))[:60],
                    요금=strip(r.get('요금',''))[:40], 주최=strip(r.get('주최',''))[:45],
                    문의=strip(r.get('문의',''))[:40], 이미지=(r.get('이미지','') or '').strip(),
-                   출처=r.get('출처',''), 링크=r.get('링크',''))
+                   소스=r.get('소스',''), 출처=r.get('출처',''), 링크=r.get('링크',''))
         if k in merged:
             m = merged[k]
             for f in ('시간','장소','요금','주최','문의','이미지'):
@@ -442,12 +458,16 @@ def main():
     if len(sys.argv) >= 3:
         months = [tuple(map(int, a.split('-'))) for a in sys.argv[1:3]]
     else:
-        t = today_kst()
-        n = (t.replace(day=28) + datetime.timedelta(days=7))
-        months = [(t.year, t.month), (n.year, n.month)]
+        # 이번 달 + 앞으로 두 달. 월말에 다음다음 달 일정이 빠지는 걸 막는다.
+        t = today_kst(); months = []
+        y, m = t.year, t.month
+        for _ in range(3):
+            months.append((y, m))
+            m += 1
+            if m > 12: m, y = 1, y + 1
     print('수집 대상:', ', '.join(f'{y}년 {m}월' for y, m in months))
     rows = build(months)
-    cols = ['번호','카테고리','명칭','시작일','종료일','시간','장소','지역','무료','요금','주최','문의','이미지','출처','링크','비고']
+    cols = ['번호','카테고리','명칭','시작일','종료일','시간','장소','지역','무료','요금','주최','문의','이미지','소스','출처','링크','비고']
     p = os.path.join(OUT, 'jeju_events_%s.csv' % today_kst().strftime('%Y%m%d'))
     with open(p, 'w', newline='', encoding='utf-8-sig') as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction='ignore'); w.writeheader(); w.writerows(rows)

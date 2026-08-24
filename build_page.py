@@ -43,6 +43,7 @@ for r in rows:
         'o': clean(r['주최'])[:40],
         'i': r.get('이미지', ''),
         'u': r['링크'],
+        'src': r.get('소스', ''),
     })
 data.sort(key=lambda x: (x['s'], x['t']))
 
