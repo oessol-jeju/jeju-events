@@ -1,4 +1,4 @@
 {
-  "_설명": "GitHub Pages 주소. 계정명/저장소명을 채우면 임베드가 이 주소에서 매일 갱신된 데이터를 읽어온다.",
-  "data_url": ""
+  "_설명": "GitHub Pages 주소. 임베드가 여기서 매일 갱신된 데이터를 읽어온다.",
+  "data_url": "https://oessol-jeju.github.io/jeju-events/events.json"
 }
