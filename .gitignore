@@ -7,3 +7,4 @@ preview/
 *.pyc
 __pycache__/
 .DS_Store
+promo/tiles/
