@@ -122,5 +122,37 @@ def build(W, H, out, kind):
     img.save(out, quality=93)
     print(out, img.size, f'{N}건 / 무료 {FREE}')
 
+def build_og(out):
+    """링크 미리보기(og:image)용 1200x630 가로형"""
+    W, H = 1200, 630
+    bg = mosaic(W, H, cols=8, seed=11)
+    # 가로형은 왼쪽에 글자, 오른쪽에 포스터가 보이게 좌→우 그라데이션
+    m = Image.new('L', (W, 1)); px = m.load()
+    for x in range(W):
+        t = x / (W - 1)
+        a = 0.97 if t < 0.42 else (0.97 - 0.62 * min(1.0, (t - 0.42) / 0.30))
+        px[x, 0] = int(255 * a)
+    m = m.resize((W, H))
+    img = Image.composite(Image.new('RGB', (W, H), (7, 7, 6)), bg, m)
+    dr = ImageDraw.Draw(img)
+    M = 64
+    y = 150
+    dr.text((M, y), 'WHAT’S ON IN JEJU', font=font(22, MED), fill=HI); y += 44
+    dr.text((M, y), '9–10월 제주', font=font(76, HEAVY), fill=INK);    y += 96
+    dr.text((M, y), '공연 · 전시 · 축제', font=font(38, MED), fill=INK); y += 78
+    nf = font(72, HEAVY)
+    dr.text((M, y), str(N), font=nf, fill=HI)
+    w1 = dr.textlength(str(N), font=nf)
+    dr.text((M + w1 + 10, y + 38), '개', font=font(30, MED), fill=INK)
+    x2 = M + w1 + 120
+    dr.text((x2, y), str(FREE), font=nf, fill=INK)
+    w2 = dr.textlength(str(FREE), font=nf)
+    dr.text((x2 + w2 + 10, y + 38), '개 무료', font=font(30, MED), fill=DIM)
+    y += 100
+    dr.text((M, y), '매일 새벽 자동 갱신 · 애월뮤직팩토리', font=font(24, LIGHT), fill=DIM)
+    img.save(out, quality=92)
+    print(out, img.size, f'{N}건 / 무료 {FREE}')
+
+build_og(os.path.join(BASE, 'og_link.jpg'))
 build(1080, 1350, os.path.join(BASE, 'ig_feed.jpg'), 'feed')
 build(1080, 1920, os.path.join(BASE, 'ig_story.jpg'), 'story')
