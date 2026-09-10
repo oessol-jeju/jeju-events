@@ -526,6 +526,13 @@ def build(months, extra=None):
         r['지역'] = '서귀포시' if re.search(SGP, s) else ('제주시' if re.search(JJU, s) else '')
         r['무료'] = 'Y' if re.search(r'무료|free', r['요금']+' '+r['명칭'], re.I) else \
                     ('N' if re.search(r'\d{1,3},?\d{3}\s*원|유료|R석|전석', r['요금']) else '')
+        # 이미지 정리 — 홈페이지가 https 라 http 이미지는 브라우저가 막는다. 문예회관의 E999/J001 같은 공용 자리표시 그림은
+        # 여러 행사에 같은 그림이 붙어 오히려 오해를 부르니 비워서 제목 카드로 보이게 한다. 깨진 템플릿 문자열도 버린다.
+        img = r['이미지'] or ''
+        img = re.sub(r'^http://(www\.jeju\.go\.kr|www\.jejunolda\.com|www\.jejusi\.go\.kr|www\.seogwipo\.go\.kr)', r'https://', img)
+        if re.search(r'/files/exhibition/[EJ]\d{3}\.(jpe?g|png|gif)$', img, re.I) or '${' in img or not img.startswith('http'):
+            img = ''
+        r['이미지'] = img
         r['비고'] = ''
     return rows
 
