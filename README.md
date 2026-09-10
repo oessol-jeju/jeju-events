@@ -18,10 +18,22 @@ jeju-events/
 
 | 언제 | 어디서 | 무엇을 |
 |---|---|---|
-| 매일 07:30 | **맥** (launchd) | 8개 소스 전부 수집 → 깃허브 푸시 |
+| 매일 07:30 | **데스크톱(윈도우)** — 작업 스케줄러 `jeju-events-daily` | 8개 소스 전부 수집 → 깃허브 푸시 (`daily_windows.ps1`) |
 | 매일 13:00 | 깃허브 Actions | 접속 가능한 소스만 갱신 (보조) |
+| (해제 권장) | 맥 launchd 07:30 | 데스크톱과 겹친다. `launchctl unload ~/Library/LaunchAgents/kr.oesol.jeju-events.plist` |
 
-맥이 주 수집기다. **깃허브 러너에서는 아래 4곳에 접속이 안 된다** (2026-08 확인, 4개 소스 전부 0건):
+**2026-09-10부터 데스크톱이 주 수집기다.** 맥북은 잠자기 상태가 되어 아침 실행을 놓치는 날이 있었다(9/7·9/8).
+데스크톱 클론은 `C:\Users\oesso\jeju-events`. 상태 확인(PowerShell):
+
+```powershell
+Get-ScheduledTaskInfo jeju-events-daily
+Get-Content C:\Users\oesso\jeju-events\out\daily.log -Tail 30
+```
+
+지금 바로 돌리기: `Start-ScheduledTask jeju-events-daily`.
+비짓제주 키는 `visitjeju_apikey.txt` 에 넣는다(맥의 같은 파일을 복사). 없으면 비짓제주 800여 건이 직전 데이터로만 유지된다.
+
+맥이 주 수집기였다. **깃허브 러너에서는 아래 4곳에 접속이 안 된다** (2026-08 확인, 4개 소스 전부 0건):
 
 - `jeju.go.kr` (문예회관) · `jejusi.go.kr` (제주아트센터) · `seogwipo.go.kr` · `playjeju.co.kr`
 
