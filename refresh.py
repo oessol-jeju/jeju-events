@@ -356,11 +356,13 @@ def src_jejunolda(months):
         while d.month == int(m):
             days.append(d.isoformat()); d += _dt.timedelta(days=1)
 
+    img_base = ['']   # 응답의 imgUrl. 커버 이미지는 imgUrl + /files/event/ + coverThumb 로 만든다 (사이트 mixin.js eventCover 와 동일)
     def one_day(day):
         try:
             d = json.loads(get(f'{JN}?act=search&format=json&pageSize=100&page=1&indayString={day}'))
         except Exception:
             return []
+        if d.get('imgUrl') and not img_base[0]: img_base[0] = d['imgUrl']
         return d.get('eventList') or []
 
     seen = {}
@@ -369,6 +371,12 @@ def src_jejunolda(months):
             for e in lst:
                 if e.get('seq') is not None:
                     seen[e['seq']] = e
+    # 홈페이지는 https 라서 http 이미지는 브라우저가 막는다. 무조건 https 로.
+    base = re.sub(r'^http://', 'https://', img_base[0] or 'https://www.jejunolda.com').rstrip('/')
+    def cover(e):
+        f = e.get('coverThumb') or e.get('cover')      # _t500 썸네일(400KB)이 원본(10MB+)보다 낫다
+        if f: return f'{base}/files/event/{f}'
+        return e.get('poster') or ''
 
     def ymd(v):
         # 저장 방식이 섞여 있다. 어떤 건 UTC 자정(00:00Z), 어떤 건 KST 자정(15:00Z).
@@ -389,7 +397,7 @@ def src_jejunolda(months):
             장소=(e.get('instituteName') or e.get('addr2') or e.get('addr1') or ''),
             요금=('무료' if pay == '무료' else pay),
             주최=(e.get('ownerName') or ''), 문의=(e.get('tel') or ''),
-            이미지=(e.get('poster') or ''),
+            이미지=cover(e),
             출처='제주인놀다',
             링크=f'https://www.jejunolda.com/event/progress.htm#{seq}'))
     return rows
