@@ -433,9 +433,11 @@ def parse_dates(s, year_hint=None):
 def key(t):
     t = unicodedata.normalize('NFC', t or '')
     t = re.sub(r'<(자체|대관)>|[「」『』<>《》〈〉\[\]()]|공연|무료','', t)
-    t = re.sub(r'^\s*(기획|초청|자체|대관|특별)\s*', '', t)      # [기획공연] 같은 접두 꼬리표 — 소스마다 붙였다 뗐다 한다
-    t = re.sub(r'\d{1,2}:\d{2}\s*$', '', t)                   # 제목 끝에 붙은 시각 (플레이제주)
-    return re.sub(r'[\s·:,\'"~\-—]','', t).lower()[:24]
+    t = re.sub(r'^\s*(안내|기획|초청|자체|대관|특별|저체)\s*', '', t)             # [기획공연]·[안내] 같은 접두 꼬리표
+    t = re.sub(r'(\d{1,2}\s*[~\-]\s*)?\d{1,2}일\s*\d{1,2}:\d{2},?\s*$', '', t)   # 「8일 11:00,」「15~16일 19:30」 (제주인놀다)
+    t = re.sub(r'\d{1,2}:\d{2}\s*$', '', t)                                    # 제목 끝 시각 (플레이제주)
+    t = re.sub(r'\s*(개최|展|전)\s*$', '', t)                                   # 「… 개최」「…展」
+    return re.sub(r'[\s·:,\'"~\-—.!?]','', t).lower()[:24]
 
 def balance(t):
     for o,c in (('「','」'),('『','』'),('《','》'),('〈','〉'),('<','>'),('(',')'),('[',']')):
@@ -519,7 +521,25 @@ def build(months, extra=None):
         else:
             merged[k] = rec
 
-    rows = sorted(merged.values(), key=lambda x: (x['시작일'], x['명칭']))
+    # 2차 병합 — 같은 제목인데 출처마다 시작일이 며칠 다른 경우(전시 개막일 표기 차이 등).
+    # 기간이 겹치면 같은 행사로 보고 앞선 쪽에 합친다. 겹치지 않으면(매주 반복 공연) 따로 둔다.
+    def _absorb(m, rec):
+        for f in ('시간','장소','요금','주최','문의','이미지'):
+            if not m[f] and rec[f]: m[f] = rec[f]
+        if rec['출처'] not in m['출처']: m['출처'] += ' / ' + rec['출처']
+        if len(rec['명칭']) > len(m['명칭']): m['명칭'] = rec['명칭']
+        if rec['종료일'] > m['종료일']: m['종료일'] = rec['종료일']
+    bykey = {}
+    for (k, a), rec in sorted(merged.items(), key=lambda kv: kv[0][1]):
+        bykey.setdefault(k, []).append(rec)
+    final = []
+    for k, lst in bykey.items():
+        cur = lst[0]
+        for rec in lst[1:]:
+            if rec['시작일'] <= cur['종료일']: _absorb(cur, rec)
+            else: final.append(cur); cur = rec
+        final.append(cur)
+    rows = sorted(final, key=lambda x: (x['시작일'], x['명칭']))
     for i, r in enumerate(rows, 1):
         s = r['장소'] + ' ' + r['명칭']
         r['번호'] = i
