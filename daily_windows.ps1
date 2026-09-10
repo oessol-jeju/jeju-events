@@ -1,4 +1,4 @@
-# 매일 자동 수집 → 깃허브 푸시. Windows 작업 스케줄러가 부른다 (daily.sh 의 윈도우판).
+﻿# 매일 자동 수집 → 깃허브 푸시. Windows 작업 스케줄러가 부른다 (daily.sh 의 윈도우판).
 # 등록: Register-ScheduledTask 는 README 「데스크톱 자동 실행」 참조.
 $ErrorActionPreference = 'Continue'
 Set-Location $PSScriptRoot
