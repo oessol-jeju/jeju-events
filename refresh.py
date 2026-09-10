@@ -425,6 +425,8 @@ def parse_dates(s, year_hint=None):
 def key(t):
     t = unicodedata.normalize('NFC', t or '')
     t = re.sub(r'<(자체|대관)>|[「」『』<>《》〈〉\[\]()]|공연|무료','', t)
+    t = re.sub(r'^\s*(기획|초청|자체|대관|특별)\s*', '', t)      # [기획공연] 같은 접두 꼬리표 — 소스마다 붙였다 뗐다 한다
+    t = re.sub(r'\d{1,2}:\d{2}\s*$', '', t)                   # 제목 끝에 붙은 시각 (플레이제주)
     return re.sub(r'[\s·:,\'"~\-—]','', t).lower()[:24]
 
 def balance(t):
