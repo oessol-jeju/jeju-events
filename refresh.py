@@ -95,36 +95,74 @@ def src_munye(months):
             rows += [r for r in ex.map(one, dict.fromkeys(seqs)) if r and r.get('명칭')]
     return rows
 
-# ─────────────────────────── 2. 플레이제주 ───────────────────────────
-PJ_BOARDS = {'concert':'콘서트·뮤지컬','drama':'연극','classic':'클래식·오페라','korean':'국악·무용',
-             'exhibition':'전시','festival':'행사·축제','family':'아동·가족'}
-def src_playjeju(months):
+# ─────────────────────────── 2. 플레이제주 (PlayX CMS API) ───────────────────────────
+# 2026-09 사이트가 board.php 게시판에서 Next.js(PlayXJeju)로 개편됐다. 게시판 HTML은 더 이상 없다.
+# 데이터는 공개 CMS API(api.playx.kr, Strapi)에서 받는다. 목록은 요약만 주고
+# 회차·가격·문의·주최는 상세 API에만 있어 건별로 한 번 더 부른다(1건 5KB).
+PJ_API    = 'https://api.playx.kr/api/cms/events'
+PJ_TENANT = 'fp5itcy1jmnsh9xnkvju713c'     # tenant 플레이제주 (documentId). 광주 등 다른 지역과 섞여 있다.
+PJ_MENU   = {'performance':'공연', 'exhibition':'전시', 'experience_event':'행사·축제', 'kids_family':'아동·가족'}
+
+def _pj_url(params):
     import urllib.parse
-    jobs = [(bo, cat, sca) for bo, cat in PJ_BOARDS.items() for sca in ('예정', '공연중')]
-    def crawl(job):
-        bo, cat, sca = job
-        rows = []
-        for page in range(1, 7):
-            s = get(f'https://www.playjeju.co.kr/bbs/board.php?bo_table={bo}&sca={urllib.parse.quote(sca)}&page={page}')
-            blocks = re.split(r'<div class="list-row">', s)[1:]
-            if not blocks: break
-            for b in blocks:
-                m = re.search(r'<strong class="en">(.*?)</strong>(.*?)(?:</div>\s*</div>\s*</div>\s*</div>)', b, re.S)
-                if not m: continue
-                cl = lambda x: re.sub(r'\s+',' ',html.unescape(re.sub(r'<[^>]+>','',x))).strip()
-                divs = [d for d in (cl(d) for d in re.findall(r'<div class="text-muted font-13"[^>]*>(.*?)</div>', m.group(2), re.S)) if d]
-                date  = next((d for d in divs if re.search(r'\d{4}-\d{2}-\d{2}', d)), '')
-                venue = next((d for d in divs if not re.search(r'\d{4}-\d{2}-\d{2}', d)), '')
-                if not date: continue
-                im = re.search(r'<img src="([^"]+)"[^>]*class="wr-img"', b)
-                rows.append(dict(구분=cat, 명칭=cl(m.group(1)), 일시=date, 시간='', 장소=venue,
-                    이미지=(im.group(1) if im else ''),
-                    요금=('무료' if re.search(r'>\s*무료\s*<', b) else ''), 주최='', 문의='', 출처='플레이제주',
-                    링크='https://www.playjeju.co.kr/bbs/board.php?bo_table=%s&wr_id=%s' % (bo,(re.search(r'wr_id=(\d+)',b) or ['',''])[1])))
-            if len(blocks) < 10: break
-        return rows
-    with ThreadPoolExecutor(max_workers=6) as ex:
-        return [r for chunk in ex.map(crawl, jobs) for r in chunk]
+    # curl 이 대괄호를 글로브로 해석하므로 [ ] 까지 전부 퍼센트 인코딩한다.
+    return PJ_API + '?' + '&'.join(urllib.parse.quote(k, safe='') + '=' + urllib.parse.quote(str(v), safe=':,')
+                                   for k, v in params)
+
+def src_playjeju(months):
+    S = f'{months[0][0]}-{int(months[0][1]):02d}-01'
+    import calendar
+    ly, lm = months[-1]; E = f'{ly}-{int(lm):02d}-{calendar.monthrange(ly, int(lm))[1]}'   # API가 없는 날짜(11-31)를 거부한다
+    items = []
+    for page in range(1, 20):
+        body = get(_pj_url([('pagination[page]', page), ('pagination[pageSize]', 100),
+                            ('filters[tenant][documentId][$eq]', PJ_TENANT),
+                            ('filters[end_date][$gte]', S), ('filters[start_date][$lte]', E),
+                            ('sort[0]', 'start_date:asc')]))
+        try: d = json.loads(body)
+        except Exception: break
+        items += d.get('data') or []
+        pg = (d.get('meta') or {}).get('pagination') or {}
+        if page >= (pg.get('pageCount') or 1): break
+
+    def one(it):
+        did = it.get('documentId')
+        det = {}
+        try: det = json.loads(get(f'{PJ_API}/{did}?populate=*')).get('data') or {}
+        except Exception: pass
+        e = {**it, **det}
+        title = (e.get('title') or '').strip()
+        if not title or not e.get('start_date'): return None
+        # 시간: 회차 목록에서 시각만 뽑아 중복 제거. 회차가 많으면 앞 4개까지.
+        times = []
+        for sc in (e.get('schedules') or []):
+            t = (sc.get('time') or '')[:5]
+            if t and t not in times: times.append(t)
+        시간 = ' / '.join(times[:4]) or (e.get('schedule_note') or '')
+        # 장소: 공연장 이름 (주소) — 주소가 있어야 제주시/서귀포시 판정이 된다.
+        vi = e.get('venue_info') or {}
+        vname = vi.get('name') or (e.get('venue') or {}).get('name') or e.get('venue_detail') or ''
+        addr = vi.get('address') or ''
+        if not addr:
+            reg = (e.get('administrative_region') or {}).get('name') or ''
+            addr = reg if reg and reg not in vname else ''
+        장소 = f'{vname} ({addr})' if addr else vname
+        # 요금: 좌석별 가격 → 없으면 price_text
+        prs = []
+        for pr in (e.get('pricing') or []):
+            if pr.get('price') is None: continue
+            seat = pr.get('seat_type') or ''
+            prs.append(f'{seat} {int(pr["price"]):,}원'.strip() if pr['price'] else f'{seat} 무료'.strip())
+        요금 = ' / '.join(prs[:4]) or (e.get('price_text') or '')
+        if prs and all(pr.get('price') == 0 for pr in e.get('pricing') or []): 요금 = '무료'
+        img = ((e.get('poster_image') or {}).get('url') or '')
+        return dict(구분=PJ_MENU.get(e.get('menu') or '', e.get('menu') or ''), 명칭=title,
+                    일시=f"{e['start_date']} ~ {e.get('end_date') or e['start_date']}", 시간=시간, 장소=장소,
+                    이미지=img, 요금=요금, 주최=(e.get('organizer') or e.get('host') or ''),
+                    문의=(e.get('inquiry_contact') or vi.get('phone') or ''), 출처='플레이제주',
+                    링크=f"https://www.playjeju.co.kr/events/{e.get('slug') or did}")
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        return [r for r in ex.map(one, items) if r]
 
 # ─────────────────────────── 3. 제주아트센터 ───────────────────────────
 def src_artcenter(months):
