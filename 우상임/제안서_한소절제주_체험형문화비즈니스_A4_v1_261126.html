@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>한 소절 제주 — 체험형 문화비즈니스 제안서</title>
+<!-- 디자인: 우상임 컬러 사양 v6.1 (2026.08.07) — 색은 넷(흰·먹·심홍·오프화이트), 심홍은 지면 10% 이하·한 장에 한 곳 -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:0}
+:root{--w:#FFF;--off:#F2F2F0;--k:#111;--red:#A6192E;--g:#8A8A88;--line:#DCDCD8;--t2:#333;--t3:#555}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#d9d9d6}
+body{font-family:'Pretendard','Inter','Noto Sans KR',Arial,sans-serif;color:var(--k);font-weight:400;line-height:1.55;letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-variant-numeric:lining-nums}
+.page{width:210mm;height:297mm;margin:8mm auto;background:#fff;position:relative;overflow:hidden;padding:16mm 16mm 0;display:flex;flex-direction:column}
+@media print{html,body{background:#fff}.page{margin:0;page-break-after:always;break-after:page}}
+.mono{font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:0}
+
+/* 머리·꼬리 */
+.tagrow{display:flex;justify-content:space-between;font-family:'Inter','Noto Sans KR',sans-serif;font-size:8pt;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding-bottom:2.4mm;border-bottom:1px solid var(--k)}
+.foot{margin-top:auto;display:flex;justify-content:space-between;font-family:'Inter','Noto Sans KR',sans-serif;font-size:7pt;letter-spacing:.06em;color:var(--g);padding:3mm 0 9mm;border-top:1px solid var(--line)}
+
+/* 장 머리 */
+.shead{display:grid;grid-template-columns:repeat(12,1fr);column-gap:5mm;padding:7mm 0 5mm}
+.snum{grid-column:span 1;font-family:'Inter',sans-serif;font-size:8.5pt;font-weight:700;letter-spacing:.1em;color:var(--red);padding-top:1.2mm}
+.stitle{grid-column:span 5;font-size:19pt;line-height:1.08;letter-spacing:-.035em;font-weight:700}
+.sdesc{grid-column:span 6;font-size:9pt;line-height:1.62;color:var(--t2)}
+.sec+.sec{border-top:1px solid var(--line);margin-top:5mm}
+
+/* 본문 요소 */
+p,li{font-size:9pt;line-height:1.65}
+b{font-weight:700}
+.kk{font-family:'Inter','Noto Sans KR',sans-serif;font-size:7.2pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--k);margin-bottom:1.8mm}
+.kk.g{color:var(--g)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm}
+.box{border:1px solid var(--line);padding:4.2mm 4.5mm 4.8mm}
+.box h4{font-size:10.5pt;font-weight:700;letter-spacing:-.02em;margin-bottom:1.5mm}
+.box p{font-size:8.6pt;color:#444}
+.box.dark{background:var(--k);border-color:var(--k);color:#fff}
+.box.dark p{color:#A5A5A2}.box.dark .kk{color:#A5A5A2}
+.box.off{background:var(--off);border-color:var(--off)}
+table{width:100%;border-collapse:collapse;font-size:8.6pt}
+th,td{text-align:left;padding:2.3mm 2.2mm;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5}
+th{font-family:'Inter','Noto Sans KR',sans-serif;font-size:7.2pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--k)}
+td.n{text-align:right}
+td b{font-weight:700}
+.note{border-left:3px solid var(--red);background:var(--off);padding:3.6mm 4.5mm;font-size:8.8pt;line-height:1.62}
+.chk{display:inline-block;font-family:'Inter','Noto Sans KR',sans-serif;font-size:6.6pt;font-weight:700;letter-spacing:.06em;border:1px solid var(--k);padding:.2mm 1.4mm;vertical-align:1px;white-space:nowrap}
+.lede{font-size:12pt;line-height:1.55;letter-spacing:-.02em}
+.big{font-size:25pt;font-weight:700;letter-spacing:-.04em;line-height:1.05}
+ul.dash{list-style:none}
+ul.dash li{position:relative;padding-left:4mm;margin-bottom:1.2mm}
+ul.dash li:before{content:"";position:absolute;left:0;top:2.6mm;width:2mm;border-top:1px solid var(--k)}
+ul.sq{list-style:none}
+ul.sq li{position:relative;padding-left:5.5mm;margin-bottom:1.6mm}
+ul.sq li:before{content:"";position:absolute;left:0;top:1.5mm;width:2.6mm;height:2.6mm;border:1.2px solid var(--k)}
+
+/* 표지 */
+.cover{padding:16mm 16mm 0}
+.cover h1{font-size:68pt;line-height:.94;letter-spacing:-.05em;font-weight:900;margin-top:22mm}
+.cover h1 .r{color:var(--red)}
+.cover .en{font-family:'Inter',sans-serif;font-size:12pt;font-weight:500;letter-spacing:.02em;color:var(--g);margin-top:5mm}
+.cover .sub{font-size:15pt;font-weight:500;letter-spacing:-.03em;margin-top:13mm;max-width:150mm;line-height:1.45}
+.cover-grid{display:grid;grid-template-columns:repeat(12,1fr);column-gap:5mm;margin-top:16mm;border-top:1px solid var(--k);padding-top:4mm}
+.cover-grid .c4{grid-column:span 4}
+.cover-grid dt{font-family:'Inter','Noto Sans KR',sans-serif;font-size:7pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:1.2mm}
+.cover-grid dd{font-size:9.5pt;line-height:1.5;font-weight:500;margin-bottom:4mm}
+.cover-black{margin:auto -16mm 0;background:var(--k);color:#fff;padding:10mm 16mm 11mm;display:grid;grid-template-columns:repeat(4,1fr);gap:5mm}
+.cover-black .v{font-size:22pt;font-weight:700;letter-spacing:-.03em;line-height:1}
+.cover-black .v small{font-size:10pt;font-weight:500;margin-left:1mm}
+.cover-black .l{font-size:7.6pt;color:#A5A5A2;margin-top:2.4mm;line-height:1.45}
+.draft{position:absolute;top:16mm;right:16mm;margin-top:9mm;font-family:'Inter','Noto Sans KR',sans-serif;font-size:7pt;font-weight:700;letter-spacing:.1em;border:1px solid var(--k);padding:1mm 2.2mm}
+
+/* 90분 흐름 */
+.flow{display:grid;grid-template-columns:25fr 30fr 25fr 10fr;border-top:1px solid var(--k)}
+.flow>div{padding:3.5mm 3.5mm 4mm 0;border-right:1px solid var(--line);margin-right:3.5mm}
+.flow>div:last-child{border-right:0;margin-right:0}
+.flow .t{font-family:'Inter',sans-serif;font-size:7.4pt;font-weight:700;letter-spacing:.06em;color:var(--g)}
+.flow .s{font-size:15pt;font-weight:700;letter-spacing:-.03em;margin:1.4mm 0 1.6mm}
+.flow p{font-size:8.4pt;color:#444;line-height:1.55}
+.bar{display:grid;grid-template-columns:25fr 30fr 25fr 10fr;height:3mm;margin-top:0}
+.bar i{display:block;background:var(--k)}
+.bar i:nth-child(2){background:#3a3a38}.bar i:nth-child(3){background:#5e5e5c}.bar i:nth-child(4){background:var(--red)}
+
+/* 3년 */
+.years{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--k)}
+.years>div{padding:3.5mm 4mm 4mm 0;border-right:1px solid var(--line);margin-right:4mm}
+.years>div:last-child{border-right:0;margin-right:0}
+.years .y{font-family:'Inter',sans-serif;font-size:22pt;font-weight:700;letter-spacing:-.03em;line-height:1}
+.years .yl{font-size:10pt;font-weight:700;margin:1.6mm 0 2.2mm}
+
+/* 조직도 */
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-top:3mm}
+.org .box{padding:3.4mm 3.6mm 3.8mm}
+.org .box h4{font-size:9.5pt}
+.org-top{border:1px solid var(--k);padding:3.6mm 4.5mm;display:flex;justify-content:space-between;align-items:baseline}
+.org-mid{background:var(--k);color:#fff;padding:3.8mm 4.5mm;display:flex;justify-content:space-between;align-items:baseline;margin-top:3mm}
+.org-mid span,.org-top span{font-size:8pt;color:var(--g)}
+.org-mid span{color:#A5A5A2}
+.vline{height:3mm;border-left:1px solid var(--k);margin-left:50%}
+</style>
+</head>
+<body>
+
+<!-- ───────────── 1. 표지 ───────────── -->
+<section class="page cover">
+  <div class="tagrow"><span>Proposal — Experiential Culture Business</span><span>Aewol, Jeju</span><span>2026.11</span></div>
+  <div class="draft">초안 · 내부 검토용</div>
+  <h1>한 소절<br>제주<span class="r">.</span></h1>
+  <div class="en">One Line of Song — Learn a Korean Song with the Accordion</div>
+  <p class="sub">우상임 아코디언 에세이로 만드는 체험형 문화비즈니스.<br>악기 연주 체험과 한국 노래 배우기를 하나로 묶은 90분 상설 관광 상품.</p>
+
+  <dl class="cover-grid">
+    <div class="c4"><dt>제안 대상(안)</dt><dd>제주관광공사<br>제주특별자치도 관광 담당 부서 <span class="chk">확인</span></dd></div>
+    <div class="c4"><dt>운영 거점</dt><dd>애월뮤직팩토리(AMF)<br>제주시 애월읍 엄수로 63</dd></div>
+    <div class="c4"><dt>대표 예술가</dt><dd>우상임<br>아코디어니스트 · 〈아코디언 에세이〉</dd></div>
+    <div class="c4"><dt>제안 책임</dt><dd>김외솔<br><span style="font-weight:400;font-size:8.6pt">한국지역출판연대 대표이사 /<br>제주대학교 대학원 교육학과 박사 수료</span></dd></div>
+    <div class="c4"><dt>운영</dt><dd>외솔컴퍼니<br><span style="font-weight:400;font-size:8.6pt">애월뮤직팩토리 위탁운영</span></dd></div>
+    <div class="c4"><dt>문서</dt><dd>v1 · 2026.11.26<br><span style="font-weight:400;font-size:8.6pt">금액·일정은 확정 전</span></dd></div>
+  </dl>
+
+  <div class="cover-black">
+    <div><div class="v mono">90<small>분</small></div><div class="l">듣기 → 만지기 → 부르기 → 함께<br>한 번에 끝나는 체험</div></div>
+    <div><div class="v mono">20<small>명</small></div><div class="l">회당 정원 · 1인 1대 아코디언</div></div>
+    <div><div class="v mono">3<small>개국</small></div><div class="l">시애틀 · 뉴질랜드 · 케냐<br>해외 무대에서 먼저 통한 작품</div></div>
+    <div><div class="v mono">5<small>종</small></div><div class="l">개별 · 프라이빗 · 단체 ·<br>외국인 · 해녀 시즌 상품</div></div>
+  </div>
+</section>
+
+<!-- ───────────── 2. 요약 · 배경 ───────────── -->
+<section class="page">
+  <div class="tagrow"><span>한 소절 제주</span><span>01–02 요약 · 배경</span><span>02</span></div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">01</div><div class="stitle">보는 관광에서<br>배워 가는 관광으로</div>
+      <div class="sdesc">관광객이 우상임의 아코디언 에세이를 25분 듣고, 직접 아코디언을 메고 한 소절을 짚어 보고, 한국 노래 한 곡을 배워 함께 부르고 떠납니다. 기념품은 물건이 아니라 <b>자기 목소리로 부른 한 소절</b>입니다.</div></div>
+    <div class="g3">
+      <div class="box"><div class="kk">무엇을</div><h4>90분 상설 체험 상품</h4><p>공연 관람 + 악기 체험 + 노래 배우기를 한 상품으로. 주 4~6회 예약제.</p></div>
+      <div class="box"><div class="kk">어디서</div><h4>애월뮤직팩토리</h4><p>공장을 재생한 복합문화공간. A홀 100석 · B홀 갤러리 · 카페 11석. 시설 투자 없이 바로 시작.</p></div>
+      <div class="box"><div class="kk">어떻게 자립</div><h4>지원은 개발에, 운영은 판매로</h4><p>공공 지원은 상품 개발·초기 마케팅에 쓰고, 운영비는 체험 판매 수익으로 충당. <span class="chk">확인</span></p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">02</div><div class="stitle">왜 지금,<br>왜 이 작품인가</div>
+      <div class="sdesc">제주 관광은 &lsquo;본다&rsquo;에서 &lsquo;해 본다&rsquo;로 옮겨 가고 있습니다. 그러나 문화예술 체험은 대부분 공방(만들기)이고, <b>음악과 노래를 배우는 체험은 거의 없습니다.</b></div></div>
+    <div class="g3" style="margin-bottom:5mm">
+      <div><div class="kk g">과제 1</div><p><b>노래를 배울 통로가 없다.</b> K-팝·드라마로 한국 노래에 관심 있는 외국인도 직접 불러 볼 곳은 노래방뿐입니다.</p></div>
+      <div><div class="kk g">과제 2</div><p><b>저녁·우천 시 갈 곳이 없다.</b> 애월·한림 서부권 숙박객의 저녁 동선이 비어 있습니다.</p></div>
+      <div><div class="kk g">과제 3</div><p><b>체험이 &lsquo;만들기&rsquo;에 쏠려 있다.</b> 듣고 부르는 체험은 공방형과 겹치지 않는 빈자리입니다.</p></div>
+    </div>
+    <table>
+      <thead><tr><th style="width:13%">연도</th><th>무대 — 이미 검증된 원천 콘텐츠</th><th style="width:30%">비고</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">2024</td><td>아코디언 에세이 세계투어① 미국 시애틀 (붉은 풍금소리 · 나의 우산)</td><td>제주의소리 · 한라일보 보도</td></tr>
+        <tr><td class="mono">2025</td><td>메세나매칭결연사업 — 뉴질랜드 3개 도시 투어</td><td>제주메세나협회 · 정산 완료</td></tr>
+        <tr><td class="mono">2026</td><td>[해외교류] 〈해녀도전폭망기〉 in Kenya</td><td>미디어제주 2026.07.03 보도</td></tr>
+        <tr><td class="mono">2026</td><td>〈세월 따라, 노래 따라〉 애월뮤직팩토리 매주 일요일 (9~10월)</td><td>상설 시즌 운영 경험</td></tr>
+        <tr><td class="mono">2026</td><td>쌀롱음악회 〈11명만 앉을 수 있습니다〉 (11~12월)</td><td>유료 소규모 프라이빗 모델 검증 중</td></tr>
+      </tbody>
+    </table>
+    <div class="note" style="margin-top:4.5mm"><b>외국 관객 앞에서 한국 노래를 설명하고 따라 부르게 해 본 경험이 이미 있습니다.</b> 이 제안은 그 경험을 제주 현지의 관광 상품으로 묶는 일입니다.</div>
+  </div>
+
+  <div class="foot"><span>외솔컴퍼니 · 애월뮤직팩토리</span><span>체험형 문화비즈니스 제안서 v1</span></div>
+</section>
+
+<!-- ───────────── 3. 정의 · 프로그램 ───────────── -->
+<section class="page">
+  <div class="tagrow"><span>한 소절 제주</span><span>03–04 개념 · 프로그램</span><span>03</span></div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">03</div><div class="stitle">체험형<br>문화비즈니스란</div>
+      <div class="sdesc">관객을 <b>참여자</b>로 바꾸고, 회차 공연을 <b>상시 예약 상품</b>으로 바꾸고, 보조금 의존을 <b>판매 수익</b>으로 바꾸는 것. 공연 사업과 무엇이 다른지 표로 정리했습니다.</div></div>
+    <table>
+      <thead><tr><th style="width:18%">구분</th><th style="width:36%">기존 공연 사업</th><th>한 소절 제주</th></tr></thead>
+      <tbody>
+        <tr><td><b>관객 역할</b></td><td>관람</td><td>관람 → 연주 → 노래 <b>(참여자)</b></td></tr>
+        <tr><td><b>수익 구조</b></td><td>보조금 + 티켓</td><td>체험비 + 단체 패키지 + 기념품(악보집·에세이북) + 여행사 위탁판매</td></tr>
+        <tr><td><b>운영 형태</b></td><td>회차 · 시즌 공연</td><td>상시 예약형 (주 4~6회)</td></tr>
+        <tr><td><b>남는 것</b></td><td>관람 기억</td><td>직접 부른 한 곡 + 녹음 파일 + 악보 카드</td></tr>
+        <tr><td><b>자립 목표</b></td><td>매년 지원에 의존</td><td>3년차 체험 매출로 운영비 자립 <span class="chk">확인</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">04</div><div class="stitle">〈한 소절 제주〉<br>90분 · 20명</div>
+      <div class="sdesc">네 단계로 부담을 줄입니다. 시범 → 따라 하기 → 혼자 해 보기 → 함께하기. 악기가 어려운 사람은 &lsquo;노래만&rsquo; 참여할 수 있습니다.</div></div>
+    <div class="bar"><i></i><i></i><i></i><i></i></div>
+    <div class="flow">
+      <div><div class="t">0–25′</div><div class="s">듣기</div><p>우상임 아코디언 에세이 미니 공연. 노래 3곡과 곡에 얽힌 이야기 — 제주, 바다, 어머니, 한국 근현대사.</p></div>
+      <div><div class="t">25–55′</div><div class="s">만지기</div><p>1인 1대 체험용 아코디언. 바람통 여닫기 → 베이스 버튼 하나 → 오른손 세 음. 아리랑 첫 소절을 직접 연주.</p></div>
+      <div><div class="t">55–80′</div><div class="s">부르기</div><p>한국 노래 1곡. 가사 카드(한글 · 로마자 · 영/중/일 뜻풀이)로 발음 · 뜻 · 사연을 짚으며 한 소절씩.</p></div>
+      <div><div class="t">80–90′</div><div class="s">함께</div><p>연주 + 합창. 녹음과 사진을 그날 QR로.</p></div>
+    </div>
+    <div class="g3" style="margin-top:5mm">
+      <div class="box off"><div class="kk">배움 목표 1</div><p>아코디언이 <b>소리 나는 원리</b>를 말할 수 있다.</p></div>
+      <div class="box off"><div class="kk">배움 목표 2</div><p>한국 노래 한 곡의 <b>첫 소절</b>을 부를 수 있다.</p></div>
+      <div class="box off"><div class="kk">배움 목표 3</div><p>그 노래가 생긴 <b>사연</b>을 한 문장으로 전할 수 있다.</p></div>
+    </div>
+  </div>
+
+  <div class="foot"><span>외솔컴퍼니 · 애월뮤직팩토리</span><span>체험형 문화비즈니스 제안서 v1</span></div>
+</section>
+
+<!-- ───────────── 4. 상품 · 곡목 ───────────── -->
+<section class="page">
+  <div class="tagrow"><span>한 소절 제주</span><span>05–06 상품 · 곡목</span><span>04</span></div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">05</div><div class="stitle">상품 라인업<br>다섯 가지</div>
+      <div class="sdesc">같은 콘텐츠를 대상과 공간에 맞게 다섯 갈래로 나눕니다. 기본형으로 상설 운영을 세우고, 단체형으로 평일·비수기를 채웁니다.</div></div>
+    <table>
+      <thead><tr><th style="width:6%"></th><th style="width:27%">상품</th><th style="width:20%">대상</th><th>형태</th></tr></thead>
+      <tbody>
+        <tr><td class="mono"><b>A</b></td><td><b>〈한 소절 제주〉 기본형</b></td><td>개별 관광객(내·외국인)</td><td>90분 · 20명 · 주 4회 상설</td></tr>
+        <tr><td class="mono"><b>B</b></td><td><b>〈11명의 쌀롱〉 프라이빗</b></td><td>커플 · 가족 · 소모임</td><td>카페 가르모슈카 11석, 차 포함. 현재 쌀롱음악회를 넓힌 형태</td></tr>
+        <tr><td class="mono"><b>C</b></td><td><b>수학여행 · 연수 단체형</b></td><td>학교 · 기업 · MICE</td><td>A홀 100석. 노래는 전원, 악기는 대표 10명 체험. 여행사 B2B</td></tr>
+        <tr><td class="mono"><b>D</b></td><td><b>K-노래 클래스 외국인형</b></td><td>외국인 FIT · 크루즈</td><td>영어 진행, 로마자 가사. 해외 투어 경험을 그대로 활용</td></tr>
+        <tr><td class="mono"><b>E</b></td><td><b>〈해녀 노래 한 소절〉 시즌형</b></td><td>전 계층</td><td>〈해녀도전폭망기〉 연계, 이어도사나 배우기. 해녀축제 시즌</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">06</div><div class="stitle">무엇을<br>부르는가</div>
+      <div class="sdesc">제주에서만 배울 수 있는 노래가 이 상품의 차별점입니다. 그래서 곡목은 제주 민요부터 고릅니다.</div></div>
+    <div class="g3">
+      <div class="box dark"><div class="kk">1순위</div><h4>제주 민요</h4><p>이어도사나 · 오돌또기 · 서우제소리. 제주 바깥에서는 배우기 어려운 노래.</p></div>
+      <div class="box"><div class="kk">2순위</div><h4>모두가 아는 노래</h4><p>아리랑(지역별 아리랑 비교) · 섬집아기 등 세대와 국적을 넘는 곡.</p></div>
+      <div class="box"><div class="kk">3순위</div><h4>외국인 요청곡</h4><p>드라마 OST · K-팝 후렴 한 소절. 공연권 · 편곡 허락이 필요.</p></div>
+    </div>
+    <div class="note" style="margin-top:5mm"><b>저작권 확인 사항.</b> 민요·전래곡은 대체로 자유롭게 쓸 수 있습니다. 작사·작곡가가 있는 동요·가요는 <b>공연권(한국음악저작권협회)</b>과 <b>가사 인쇄 허락</b>을 따로 받아야 합니다. 악보집을 판매하면 곡마다 권리를 정리합니다. <span class="chk">확인</span></div>
+  </div>
+
+  <div class="foot"><span>외솔컴퍼니 · 애월뮤직팩토리</span><span>체험형 문화비즈니스 제안서 v1</span></div>
+</section>
+
+<!-- ───────────── 5. 채널 · 일정 ───────────── -->
+<section class="page">
+  <div class="tagrow"><span>한 소절 제주</span><span>07–08 판매 · 일정</span><span>05</span></div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">07</div><div class="stitle">누구에게,<br>어디서 파는가</div>
+      <div class="sdesc">서부권 숙박객을 주력으로, 외국인을 성장축으로, 단체를 안정 매출로 둡니다. 도민은 재방문 고객입니다.</div></div>
+    <table>
+      <thead><tr><th style="width:32%">타깃</th><th style="width:14%">역할</th><th>판매 채널</th></tr></thead>
+      <tbody>
+        <tr><td><b>애월 · 한림 서부권 숙박 관광객</b></td><td>주력</td><td>숙소 제휴(프런트 QR) · 네이버 예약 · 비짓제주</td></tr>
+        <tr><td><b>외국인 FIT · 크루즈</b></td><td>성장</td><td>글로벌 체험 판매 플랫폼 <span class="chk">확인</span> · 제주관광공사 외국인 홍보 채널</td></tr>
+        <tr><td><b>수학여행 · 연수 단체</b></td><td>안정 매출</td><td>여행사 B2B · 교육청 체험학습 목록</td></tr>
+        <tr><td><b>도민 · 한 달 살기</b></td><td>재방문</td><td>인스타그램 · 쌀롱 멤버십</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">08</div><div class="stitle">3년 일정</div>
+      <div class="sdesc">1년차에 상품을 만들고, 2년차에 넓히고, 3년차에 운영비를 스스로 댑니다.</div></div>
+    <div class="years">
+      <div><div class="y mono">2027</div><div class="yl">상품 개발</div>
+        <ul class="dash">
+          <li>커리큘럼 · 4개 국어 가사카드</li>
+          <li>체험용 아코디언 확보</li>
+          <li>상반기 시범 운영 20회 · 만족도 조사</li>
+          <li>하반기 상설 주 4회</li>
+          <li>숙소 10곳 제휴 · 판매 플랫폼 등록</li>
+          <li>단체 상품 출시</li>
+        </ul></div>
+      <div><div class="y mono">2028</div><div class="yl">확산</div>
+        <ul class="dash">
+          <li>외국인형 정례화</li>
+          <li>보조강사 2명 양성 (제자 · 지역 아코디언 동호인)</li>
+          <li>악보집 · 에세이북 출간</li>
+          <li>해녀 시즌 상품 운영</li>
+        </ul></div>
+      <div><div class="y mono">2029</div><div class="yl">자립</div>
+        <ul class="dash">
+          <li>체험 매출로 운영비 충당</li>
+          <li>찾아가는 체험 — 호텔 · 크루즈 터미널</li>
+          <li>관광 기념품(음원 · 악보) 상설 판매</li>
+        </ul></div>
+    </div>
+  </div>
+
+  <div class="foot"><span>외솔컴퍼니 · 애월뮤직팩토리</span><span>체험형 문화비즈니스 제안서 v1</span></div>
+</section>
+
+<!-- ───────────── 6. 예산 · 지표 ───────────── -->
+<section class="page">
+  <div class="tagrow"><span>한 소절 제주</span><span>09–10 예산 · 성과</span><span>06</span></div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">09</div><div class="stitle">1년차 예산<br>구조</div>
+      <div class="sdesc">항목 구조만 잡았습니다. <b>금액은 공모 상한액이 나오면 채웁니다.</b> 모든 금액은 제출 전에 확인을 거칩니다.</div></div>
+    <table>
+      <thead><tr><th style="width:15%">구분</th><th style="width:30%">항목</th><th>산출 근거(안)</th><th style="width:14%" class="n">금액</th></tr></thead>
+      <tbody>
+        <tr><td><b>상품 개발</b></td><td>커리큘럼 · 대본 개발</td><td>예술가 · 기획자 개발비</td><td class="n"><span class="chk">확인</span></td></tr>
+        <tr><td></td><td>가사카드 · 워크북 4개 국어</td><td>번역 · 디자인 · 인쇄</td><td class="n"><span class="chk">확인</span></td></tr>
+        <tr><td></td><td>저작권 처리</td><td>곡별 공연권 · 인쇄 허락</td><td class="n"><span class="chk">확인</span></td></tr>
+        <tr><td><b>장비</b></td><td>체험용 아코디언</td><td>학습용 소형 20대 + 유지보수</td><td class="n"><span class="chk">확인</span></td></tr>
+        <tr><td></td><td>녹음 · QR 전송 장비</td><td>마이크 · 레코더</td><td class="n"><span class="chk">확인</span></td></tr>
+        <tr><td><b>운영</b></td><td>예술가 · 보조강사 사례비</td><td>회당 단가 × 시범 20회</td><td class="n"><span class="chk">확인</span></td></tr>
+        <tr><td></td><td>공간 운영비</td><td>AMF 회당 사용</td><td class="n"><span class="chk">확인</span></td></tr>
+        <tr><td><b>마케팅</b></td><td>영상 · 사진</td><td>1분 숏폼 4편 · 외국어 소개</td><td class="n"><span class="chk">확인</span></td></tr>
+        <tr><td></td><td>숙소 · 판매 플랫폼 판촉</td><td>제휴 키트 · 판매 수수료</td><td class="n"><span class="chk">확인</span></td></tr>
+        <tr><td><b>평가</b></td><td>만족도 조사 · 성과 보고</td><td></td><td class="n"><span class="chk">확인</span></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:3mm;color:var(--t3);font-size:8.4pt">가격 참고 — 현재 쌀롱음악회 40,000원. 체험형은 악기 체험 · 녹음이 더해지므로 판매가는 시범 운영 뒤에 정합니다.</p>
+  </div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">10</div><div class="stitle">성과 지표</div>
+      <div class="sdesc">숫자 목표는 예산이 정해진 뒤 함께 확정합니다. 질적 성과로 참가자 녹음과 외국어 후기를 아카이브합니다.</div></div>
+    <div class="g4">
+      <div class="box"><div class="kk g">참가자</div><div class="big mono">○○○</div><p>연간 · 외국인 비율 ○○%</p></div>
+      <div class="box"><div class="kk g">운영 회차</div><div class="big mono">○○○</div><p>연간 상설 회차</p></div>
+      <div class="box"><div class="kk g">만족도</div><div class="big mono">4.5<span style="font-size:11pt">/5</span></div><p>추천 의향 포함</p></div>
+      <div class="box"><div class="kk g">제휴</div><div class="big mono">10·3</div><p>숙소 10곳 · 여행사 3곳</p></div>
+    </div>
+  </div>
+
+  <div class="foot"><span>외솔컴퍼니 · 애월뮤직팩토리</span><span>체험형 문화비즈니스 제안서 v1</span></div>
+</section>
+
+<!-- ───────────── 7. 추진체계 · 위험 ───────────── -->
+<section class="page">
+  <div class="tagrow"><span>한 소절 제주</span><span>11–12 체계 · 위험</span><span>07</span></div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">11</div><div class="stitle">추진 체계</div>
+      <div class="sdesc">공공은 개발 지원과 홍보 채널을, 외솔컴퍼니는 기획 · 운영 · 정산을, 우상임은 예술감독과 진행을 맡습니다.</div></div>
+    <div class="org-top"><b>제주관광공사 · 제주특별자치도 관광 담당 부서</b><span>공모 지원 · 홍보 채널 · 관광 상품 인증</span></div>
+    <div class="vline"></div>
+    <div class="org-mid" style="margin-top:0"><b>외솔컴퍼니</b><span>총괄 기획 · 운영 · 정산 / 애월뮤직팩토리 운영</span></div>
+    <div class="org">
+      <div class="box"><div class="kk">예술감독</div><h4>우상임</h4><p>공연 · 진행 · 곡목</p></div>
+      <div class="box"><div class="kk g">교육</div><h4>보조강사</h4><p>악기 체험 보조</p></div>
+      <div class="box"><div class="kk g">판매</div><h4>숙소 · 여행사</h4><p>제휴 판매</p></div>
+      <div class="box"><div class="kk g">제작</div><h4>번역 · 디자인</h4><p>가사카드 · 외국어 홍보</p></div>
+    </div>
+    <table style="margin-top:4.5mm">
+      <thead><tr><th style="width:15%">연도</th><th>외솔컴퍼니 근거 실적 <span class="chk">확인</span></th></tr></thead>
+      <tbody>
+        <tr><td class="mono">2018–21</td><td>문화가 있는 날 지역문화콘텐츠 특성화 사업 — 기획 · 운영 · 정산 총괄, 정산 완료</td></tr>
+        <tr><td class="mono">2019</td><td>신나는예술여행 지역협력특화 제주 「찾아가는 작은 음악회」 — 총감독</td></tr>
+        <tr><td class="mono">2023</td><td>문화가 있는 날 〈실버마이크〉 제주권 — 총괄PM, 정산 완료</td></tr>
+        <tr><td class="mono">2024–26</td><td>우상임 아코디언 에세이 해외 투어 (시애틀 · 뉴질랜드 · 케냐) — 기획 · 제작 · 음향</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="shead"><div class="snum">12</div><div class="stitle">위험과 대응</div>
+      <div class="sdesc">예상되는 다섯 가지 위험을 미리 정리했습니다.</div></div>
+    <table>
+      <thead><tr><th style="width:36%">위험</th><th>대응</th></tr></thead>
+      <tbody>
+        <tr><td><b>아코디언이 무거워 체험이 어렵다</b></td><td>학습용 소형 악기, 앉아서 진행. 원하면 &lsquo;노래만&rsquo; 참여</td></tr>
+        <tr><td><b>예술가 1인 의존</b></td><td>2년차까지 보조강사 2명 양성, 진행 매뉴얼화</td></tr>
+        <tr><td><b>외국인 모객 부진</b></td><td>판매 전 시범 운영에서 외국인 모니터단 운영</td></tr>
+        <tr><td><b>저작권 분쟁</b></td><td>민요 중심 곡목, 그 밖의 곡은 사전 허락 후 사용</td></tr>
+        <tr><td><b>비수기 공백</b></td><td>수학여행 · 연수 단체 상품으로 평일 채우기</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot"><span>외솔컴퍼니 · 애월뮤직팩토리</span><span>체험형 문화비즈니스 제안서 v1</span></div>
+</section>
+
+<!-- ───────────── 8. 맺음 (검은 장) ───────────── -->
+<section class="page" style="background:var(--k);color:#fff">
+  <div class="tagrow" style="border-color:#3A3A38"><span>한 소절 제주</span><span>Closing</span><span>08</span></div>
+  <div style="margin-top:46mm">
+    <div class="kk" style="color:#A5A5A2">한 줄로</div>
+    <p style="font-size:30pt;font-weight:700;letter-spacing:-.04em;line-height:1.2;color:#fff">제주를 떠나는 사람이<br>노래 한 소절을<br>가지고 가게 합니다.</p>
+  </div>
+  <div class="g3" style="margin-top:22mm;border-top:1px solid #3A3A38;padding-top:5mm">
+    <div><div class="kk" style="color:#C4243B">다음 단계 1</div><p style="color:#D8D8D5">2027 공모 일정 · 사업명 확인 후 양식 맞추기</p></div>
+    <div><div class="kk" style="color:#A5A5A2">다음 단계 2</div><p style="color:#D8D8D5">시범 운영 1회 — 외국인 모니터 10명, 사진 · 후기 확보</p></div>
+    <div><div class="kk" style="color:#A5A5A2">다음 단계 3</div><p style="color:#D8D8D5">아코디언 견적 · 사례비 구조 합의 → 예산 확정</p></div>
+  </div>
+  <div class="foot" style="border-color:#3A3A38;color:#8A8A88"><span>외솔컴퍼니 · 애월뮤직팩토리 · 제주시 애월읍 엄수로 63</span><span>제안 책임 김외솔</span></div>
+</section>
+
+</body>
+</html>
